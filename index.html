@@ -7,42 +7,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Mode Selection Screen -->
-    <div class="screen mode-screen active" id="mode-screen">
-        <div class="mode-content">
-            <h1>Choose Your Mode! 🎮</h1>
-            <div class="mode-buttons">
-                <button class="mode-button speaking-mode" onclick="selectMode('speaking')">
-                    <span class="mode-icon">🎤</span>
-                    <span class="mode-title">Speaking Mode</span>
-                    <span class="mode-description">Speak the color names!</span>
-                </button>
-                <button class="mode-button clicking-mode" onclick="selectMode('clicking')">
-                    <span class="mode-icon">🖱️</span>
-                    <span class="mode-title">Clicking Mode</span>
-                    <span class="mode-description">Click the color buttons!</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Explainer Screen -->
-    <div class="screen explainer-screen" id="explainer-screen">
+    <div class="screen explainer-screen active" id="explainer-screen">
         <div class="explainer-content">
             <h1>Welcome to Popsicle Color Game! 🍭</h1>
             <div class="instructions">
                 <h2>How to Play:</h2>
                 <ol>
                     <li>Look at the colored popsicle shown on the screen</li>
-                    <li id="mode-specific-instruction">Speak the name of the color</li>
+                    <li>Click the button that matches the color</li>
                     <li>Get 3 correct answers to complete each level</li>
                     <li>Complete all 3 levels to win!</li>
-                    <li>You have 10 seconds for each level!</li>
+                    <li>You have 30 seconds for each level!</li>
                 </ol>
                 <div class="example">
                     <p>For example:</p>
                     <div class="example-popsicle"></div>
-                    <p id="mode-specific-example">If you see a blue popsicle, say "Blue"!</p>
+                    <p>If you see a blue popsicle, click the "Blue" button!</p>
                 </div>
             </div>
             <button class="start-button" onclick="startGame()">Start Game</button>

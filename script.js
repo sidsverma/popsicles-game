@@ -44,9 +44,6 @@ const MAX_TIME = 30; // Maximum time in seconds
 let timeLeft = MAX_TIME;
 let timerInterval;
 let timerCircle;
-let recognition;
-let isListening = false;
-let gameMode = 'speaking'; // Default mode
 
 // Meme templates for failure screen
 const memeTemplates = [
@@ -101,159 +98,6 @@ const memeTemplates = [
         bottomText: 'you_almost_got_it'
     }
 ];
-
-// Function to select game mode
-function selectMode(mode) {
-    gameMode = mode;
-    document.getElementById('mode-screen').classList.remove('active');
-    document.getElementById('explainer-screen').classList.add('active');
-    
-    // Update instructions based on mode
-    const modeInstruction = document.getElementById('mode-specific-instruction');
-    const modeExample = document.getElementById('mode-specific-example');
-    
-    if (mode === 'speaking') {
-        modeInstruction.textContent = 'Speak the name of the color';
-        modeExample.textContent = 'If you see a blue popsicle, say "Blue"!';
-    } else {
-        modeInstruction.textContent = 'Click the button that matches the color';
-        modeExample.textContent = 'If you see a blue popsicle, click the "Blue" button!';
-    }
-}
-
-// Initialize speech recognition
-function initSpeechRecognition() {
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'en-US';
-
-        recognition.onresult = function(event) {
-            const result = event.results[event.results.length - 1];
-            const transcript = result[0].transcript.toLowerCase().trim();
-            
-            // Only process final results
-            if (result.isFinal) {
-                handleVoiceInput(transcript);
-            }
-        };
-
-        recognition.onerror = function(event) {
-            console.error('Speech recognition error:', event.error);
-            
-            // Only switch modes for specific errors
-            if (event.error === 'not-allowed') {
-                alert('Please allow microphone access to use the speaking mode!');
-                selectMode('clicking');
-            } else if (event.error === 'no-speech') {
-                // Don't switch modes for no-speech error, just try again
-                if (isListening && gameMode === 'speaking') {
-                    setTimeout(() => {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.error('Error restarting recognition:', e);
-                        }
-                    }, 1000);
-                }
-            } else {
-                // For other errors, try to restart recognition
-                if (isListening && gameMode === 'speaking') {
-                    setTimeout(() => {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.error('Error restarting recognition:', e);
-                        }
-                    }, 1000);
-                }
-            }
-        };
-
-        recognition.onend = function() {
-            // Only restart if we're still in speaking mode and should be listening
-            if (isListening && gameMode === 'speaking') {
-                try {
-                    recognition.start();
-                } catch (e) {
-                    console.error('Error restarting recognition:', e);
-                    // Don't switch modes, just try again
-                    setTimeout(() => {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.error('Error restarting recognition:', e);
-                        }
-                    }, 1000);
-                }
-            }
-        };
-    } else {
-        console.error('Speech recognition not supported');
-        alert('Speech recognition is not supported in your browser. Switching to clicking mode.');
-        selectMode('clicking');
-    }
-}
-
-// Function to start listening
-function startListening() {
-    if (recognition && gameMode === 'speaking') {
-        try {
-            isListening = true;
-            recognition.start();
-            const micButton = document.querySelector('.mic-button');
-            if (micButton) {
-                micButton.classList.add('listening');
-                micButton.title = 'Click to stop listening';
-            }
-        } catch (e) {
-            console.error('Error starting recognition:', e);
-            // Don't switch modes immediately, try again
-            setTimeout(() => {
-                try {
-                    recognition.start();
-                } catch (e) {
-                    console.error('Error starting recognition:', e);
-                }
-            }, 1000);
-        }
-    }
-}
-
-// Function to stop listening
-function stopListening() {
-    if (recognition) {
-        isListening = false;
-        try {
-            recognition.stop();
-        } catch (e) {
-            console.error('Error stopping recognition:', e);
-        }
-        const micButton = document.querySelector('.mic-button');
-        if (micButton) {
-            micButton.classList.remove('listening');
-            micButton.title = 'Click to start speaking';
-        }
-    }
-}
-
-// Function to handle voice input
-function handleVoiceInput(result) {
-    if (gameMode !== 'speaking') return;
-    
-    // Clean up the transcript
-    const cleanResult = result.toLowerCase().trim();
-    
-    // Find matching color
-    const selectedColor = options.find(option => 
-        option.name.toLowerCase() === cleanResult
-    );
-
-    if (selectedColor) {
-        checkAnswer(selectedColor);
-    }
-}
 
 // Get DOM elements
 const gameContainer = document.querySelector('.game-container');
@@ -338,7 +182,6 @@ function startGame() {
     explainerScreen.classList.remove('active');
     gameContainer.style.display = 'block';
     initTimerCircle();
-    initSpeechRecognition();
     startNewRound();
 }
 
@@ -377,22 +220,6 @@ function getRandomOptions(correctColor) {
 function createOptionButtons(options) {
     optionsContainer.innerHTML = '';
     
-    // Add microphone button only in speaking mode
-    if (gameMode === 'speaking') {
-        const micButton = document.createElement('button');
-        micButton.className = 'mic-button';
-        micButton.innerHTML = '🎤';
-        micButton.title = 'Click to speak the color';
-        micButton.onclick = () => {
-            if (isListening) {
-                stopListening();
-            } else {
-                startListening();
-            }
-        };
-        optionsContainer.appendChild(micButton);
-    }
-
     // Add color buttons
     options.forEach(option => {
         const button = document.createElement('button');
@@ -412,7 +239,6 @@ function getRandomMeme() {
 // Function to show success screen
 function showSuccessScreen() {
     stopTimer();
-    stopListening();
     finalScoreElement.textContent = score;
     successScreen.classList.add('active');
 }
@@ -420,7 +246,6 @@ function showSuccessScreen() {
 // Function to show failure screen
 function showFailureScreen() {
     stopTimer();
-    stopListening();
     const memeContainer = document.querySelector('.meme-container img');
     memeContainer.src = getRandomMeme();
     failureScreen.classList.add('active');
@@ -478,11 +303,6 @@ function startNewRound() {
     sounds.start.currentTime = 0;
     sounds.start.play();
     startTimer();
-    
-    // Start listening only in speaking mode
-    if (gameMode === 'speaking') {
-        startListening();
-    }
 }
 
 // Function to restart game
@@ -494,6 +314,5 @@ function restartGame() {
     updateProgress();
     successScreen.classList.remove('active');
     failureScreen.classList.remove('active');
-    document.getElementById('mode-screen').classList.add('active');
-    document.getElementById('explainer-screen').classList.remove('active');
+    document.getElementById('explainer-screen').classList.add('active');
 } 
