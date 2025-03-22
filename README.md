@@ -31,13 +31,13 @@ An educational game designed for children aged 3-5 to learn and practice color r
 
 ## Live Demo
 
-[Play the game here](https://YOUR_GITHUB_USERNAME.github.io/popsicles-game)
+[Play the game here](https://sidsverma.github.io/popsicles-game)
 
 ## Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/popsicles-game.git
+git clone https://github.com/sidsverma/popsicles-game.git
 ```
 
 2. Open `index.html` in your web browser
