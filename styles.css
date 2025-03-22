@@ -1,0 +1,469 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-container {
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.3s ease;
+}
+
+.level-text {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.popsicle-container {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.popsicle {
+    width: 120px;
+    height: 300px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.popsicle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    background: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.2) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.2) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.2) 75%);
+    background-size: 20px 20px;
+    border-radius: 60px 60px 20px 20px;
+    box-shadow: inset -5px -5px 15px rgba(0,0,0,0.1);
+}
+
+.popsicle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 80px;
+    background: linear-gradient(to bottom, #8B4513, #654321);
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.popsicle:hover {
+    transform: rotateY(10deg);
+}
+
+.options-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.option-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.option-button:hover {
+    transform: scale(1.05);
+    background-color: #e0e0e0;
+}
+
+.score-container {
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.correct {
+    background-color: #4CAF50 !important;
+    color: white;
+    box-shadow: 0 2px 5px rgba(76,175,80,0.3);
+}
+
+.incorrect {
+    background-color: #f44336 !important;
+    color: white;
+    box-shadow: 0 2px 5px rgba(244,67,54,0.3);
+}
+
+/* Screen Styles */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.celebration, .failure-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+}
+
+.celebration h2, .failure-content h2 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.celebration p, .failure-content p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.final-score {
+    font-size: 1.5rem;
+    color: #4CAF50;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.meme-container {
+    margin: 1.5rem 0;
+}
+
+.meme-container img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.restart-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.restart-button:hover {
+    transform: scale(1.05);
+    background-color: #45a049;
+}
+
+/* Explainer Screen Styles */
+.explainer-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.explainer-content h1 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.instructions {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.instructions h2 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.instructions ol {
+    margin-left: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.instructions li {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+.example {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+}
+
+.example p {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.example-popsicle {
+    width: 80px;
+    height: 200px;
+    margin: 0 auto 1rem;
+    background-color: #0000FF;
+    border-radius: 40px 40px 15px 15px;
+    position: relative;
+}
+
+.example-popsicle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 50px;
+    background: linear-gradient(to bottom, #8B4513, #654321);
+    border-radius: 0 0 3px 3px;
+}
+
+.start-button {
+    padding: 1rem 3rem;
+    font-size: 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.start-button:hover {
+    transform: scale(1.05);
+    background-color: #45a049;
+}
+
+/* Timer Styles */
+.timer-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.timer-circle {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    z-index: 1;
+}
+
+.timer-svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.timer-circle-bg {
+    fill: none;
+    stroke: #f0f0f0;
+    stroke-width: 4;
+}
+
+.timer-circle-progress {
+    fill: none;
+    stroke: #4CAF50;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.timer-warning .timer-circle-progress {
+    stroke: #FFA500;
+}
+
+.timer-danger .timer-circle-progress {
+    stroke: #f44336;
+}
+
+/* Microphone Button Styles */
+.mic-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.mic-button:hover {
+    transform: scale(1.1);
+    background-color: #45a049;
+}
+
+.mic-button.listening {
+    background-color: #f44336;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Mode Selection Screen Styles */
+.mode-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.mode-content h1 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.mode-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mode-button {
+    flex: 1;
+    min-width: 300px;
+    padding: 2rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f8f8f8;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mode-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.mode-icon {
+    font-size: 3rem;
+}
+
+.mode-title {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.mode-description {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.speaking-mode {
+    background: linear-gradient(135deg, #f8f8f8 0%, #e8f5e9 100%);
+}
+
+.clicking-mode {
+    background: linear-gradient(135deg, #f8f8f8 0%, #e3f2fd 100%);
+} 

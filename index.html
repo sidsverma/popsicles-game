@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popsicle Color Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Mode Selection Screen -->
+    <div class="screen mode-screen active" id="mode-screen">
+        <div class="mode-content">
+            <h1>Choose Your Mode! 🎮</h1>
+            <div class="mode-buttons">
+                <button class="mode-button speaking-mode" onclick="selectMode('speaking')">
+                    <span class="mode-icon">🎤</span>
+                    <span class="mode-title">Speaking Mode</span>
+                    <span class="mode-description">Speak the color names!</span>
+                </button>
+                <button class="mode-button clicking-mode" onclick="selectMode('clicking')">
+                    <span class="mode-icon">🖱️</span>
+                    <span class="mode-title">Clicking Mode</span>
+                    <span class="mode-description">Click the color buttons!</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explainer Screen -->
+    <div class="screen explainer-screen" id="explainer-screen">
+        <div class="explainer-content">
+            <h1>Welcome to Popsicle Color Game! 🍭</h1>
+            <div class="instructions">
+                <h2>How to Play:</h2>
+                <ol>
+                    <li>Look at the colored popsicle shown on the screen</li>
+                    <li id="mode-specific-instruction">Speak the name of the color</li>
+                    <li>Get 3 correct answers to complete each level</li>
+                    <li>Complete all 3 levels to win!</li>
+                    <li>You have 10 seconds for each level!</li>
+                </ol>
+                <div class="example">
+                    <p>For example:</p>
+                    <div class="example-popsicle"></div>
+                    <p id="mode-specific-example">If you see a blue popsicle, say "Blue"!</p>
+                </div>
+            </div>
+            <button class="start-button" onclick="startGame()">Start Game</button>
+        </div>
+    </div>
+
+    <div class="game-container" style="display: none;">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="level-text">Level: <span id="current-level">1</span>/3</div>
+        </div>
+        <div class="timer-container">
+            <div class="timer-circle">
+                <div class="timer-text" id="timer">30</div>
+                <svg class="timer-svg">
+                    <circle class="timer-circle-bg" cx="30" cy="30" r="25"/>
+                    <circle class="timer-circle-progress" cx="30" cy="30" r="25"/>
+                </svg>
+            </div>
+        </div>
+        <h1>Popsicle Color Game</h1>
+        <div class="popsicle-container">
+            <div class="popsicle" id="popsicle"></div>
+        </div>
+        <div class="options-container" id="options">
+            <!-- Options will be added here by JavaScript -->
+        </div>
+        <div class="score-container">
+            <p>Score: <span id="score">0</span></p>
+        </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="screen success-screen" id="success-screen">
+        <div class="celebration">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p>You've completed all levels!</p>
+            <div class="final-score">Final Score: <span id="final-score">0</span></div>
+            <button class="restart-button" onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Failure Screen -->
+    <div class="screen failure-screen" id="failure-screen">
+        <div class="failure-content">
+            <h2>Oops! Don't worry!</h2>
+            <p>Learning takes time! Let's try again!</p>
+            <div class="meme-container">
+                <img src="https://api.memegen.link/images/doge/such_learning/very_practice.png" alt="Cute Doge Meme">
+            </div>
+            <button class="restart-button" onclick="restartGame()">Try Again</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
