@@ -20,9 +20,14 @@ const sounds = {
     start: new Audio('sounds/start.mp3')
 };
 
-// Set volume for all sounds
+// Set volume for all sounds and handle missing files
 Object.values(sounds).forEach(sound => {
     sound.volume = 0.5;
+    // Handle missing sound files
+    sound.onerror = function() {
+        console.log('Sound file not found, continuing without sound');
+        this.play = function() {}; // Override play to do nothing
+    };
 });
 
 let currentColor;
